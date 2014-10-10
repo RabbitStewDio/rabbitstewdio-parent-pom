@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.1.9</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -12,11 +12,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <dependencies.scala.version>2.11.2</dependencies.scala.version>
     <dependencies.scala.version.short>2.11</dependencies.scala.version.short>
-    <dependencies.scoverage.version>0.99.9</dependencies.scoverage.version>
-    <dependencies.scoverage-maven-plugin.version>0.99.2</dependencies.scoverage-maven-plugin.version>
     <dependencies.slf4j.version>1.7.6</dependencies.slf4j.version>
-
-    <project.build.scoverageOutputDirectory>${project.build.outputDirectory}/classes-coverage</project.build.scoverageOutputDirectory>
   </properties>
 
   <organization>
@@ -30,16 +26,6 @@
       <url>http://repo.rabbitstewdio.local/monkeyrepo</url>
     </repository>
   </distributionManagement>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.scoverage</groupId>
-        <artifactId>scalac-scoverage-plugin_${dependencies.scala.version.short}</artifactId>
-        <version>${dependencies.scoverage.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <plugins>
@@ -201,33 +187,7 @@
     <profile>
       <id>scoverage</id>
 
-      <dependencies>
-        <dependency>
-          <groupId>org.scoverage</groupId>
-          <artifactId>scalac-scoverage-plugin_${dependencies.scala.version.short}</artifactId>
-          <scope>provided</scope>
-        </dependency>
-      </dependencies>
-
       <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-scoverage-resources</id>
-                <goals>
-                  <goal>resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.scoverageOutputDirectory}</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-
         <pluginManagement>
           <plugins>
             <plugin>
@@ -277,26 +237,6 @@
                   </configuration>
                 </execution>
                 <execution>
-                  <id>compile-with-coverage</id>
-                  <goals>
-                    <goal>compile</goal>
-                  </goals>
-                  <configuration>
-                    <outputDir>${project.build.scoverageOutputDirectory}</outputDir>
-                    <compilerPlugins>
-                      <compilerPlugin>
-                        <groupId>org.scoverage</groupId>
-                        <artifactId>scalac-scoverage-plugin_${dependencies.scala.version.short}</artifactId>
-                        <version>${dependencies.scoverage.version}</version>
-                      </compilerPlugin>
-                    </compilerPlugins>
-                    <args>
-                      <arg>-g:vars</arg>
-                      <arg>-P:scoverage:dataDir:${project.build.directory}</arg>
-                    </args>
-                  </configuration>
-                </execution>
-                <execution>
                   <id>test</id>
                   <goals>
                     <goal>testCompile</goal>
@@ -312,35 +252,6 @@
               </configuration>
             </plugin>
 
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <configuration>
-                <classesDirectory>${project.build.scoverageOutputDirectory}</classesDirectory>
-              </configuration>
-            </plugin>
-
-            <plugin>
-              <groupId>org.scoverage</groupId>
-              <artifactId>maven-scoverage-plugin</artifactId>
-              <version>${dependencies.scoverage-maven-plugin.version}</version>
-              <executions>
-                <execution>
-                  <id>generate-scoverage-report</id>
-                  <phase>package</phase>
-                  <goals>
-                    <goal>report</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <dependencies>
-                <dependency>
-                  <groupId>org.scoverage</groupId>
-                  <artifactId>scalac-scoverage-plugin_${dependencies.scala.version.short}</artifactId>
-                  <version>${dependencies.scoverage.version}</version>
-                </dependency>
-              </dependencies>
-            </plugin>
           </plugins>
         </pluginManagement>
       </build>
