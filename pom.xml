@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.1.6</version>
+  <version>1.1.7</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -15,6 +15,8 @@
     <dependencies.scoverage.version>0.99.9</dependencies.scoverage.version>
     <dependencies.scoverage-maven-plugin.version>0.99.2</dependencies.scoverage-maven-plugin.version>
     <dependencies.slf4j.version>1.7.6</dependencies.slf4j.version>
+
+    <project.build.scoverageOutputDirectory>${project.build.outputDirectory}/classes-coverage</project.build.scoverageOutputDirectory>
   </properties>
 
   <organization>
@@ -208,6 +210,26 @@
       </dependencies>
 
       <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-scoverage-resources</id>
+                <goals>
+                  <goal>resource</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>
+                    <outputDirectory>${project.build.scoverageOutputDirectory}</outputDirectory>
+                  </outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+
         <pluginManagement>
           <plugins>
             <plugin>
@@ -262,7 +284,7 @@
                     <goal>compile</goal>
                   </goals>
                   <configuration>
-                    <outputDir>${project.build.directory}/classes-coverage</outputDir>
+                    <outputDir>${project.build.scoverageOutputDirectory}</outputDir>
                     <compilerPlugins>
                       <compilerPlugin>
                         <groupId>org.scoverage</groupId>
@@ -291,6 +313,15 @@
                 </jvmArgs>
               </configuration>
             </plugin>
+
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <configuration>
+                <classesDirectory>${project.build.scoverageOutputDirectory}</classesDirectory>
+              </configuration>
+            </plugin>
+
             <plugin>
               <groupId>org.scoverage</groupId>
               <artifactId>maven-scoverage-plugin</artifactId>
