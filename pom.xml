@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.1.8</version>
+  <version>1.1.9</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -221,9 +221,7 @@
                   <goal>resources</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>
-                    <outputDirectory>${project.build.scoverageOutputDirectory}</outputDirectory>
-                  </outputDirectory>
+                  <outputDirectory>${project.build.scoverageOutputDirectory}</outputDirectory>
                 </configuration>
               </execution>
             </executions>
