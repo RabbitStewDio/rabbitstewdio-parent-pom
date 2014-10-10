@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -29,6 +29,11 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>com.rabbitstewdio.infrastructure</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.2-SNAPSHOT</version>
+      </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <groupId>org.apache.maven.plugins</groupId>
