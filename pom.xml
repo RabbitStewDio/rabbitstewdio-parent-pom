@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -13,6 +13,7 @@
     <dependencies.scala.version>2.11.2</dependencies.scala.version>
     <dependencies.scala.version.short>2.11</dependencies.scala.version.short>
     <dependencies.slf4j.version>1.7.6</dependencies.slf4j.version>
+    <cobertura.ignoreMethodAnnotation></cobertura.ignoreMethodAnnotation>
   </properties>
 
   <organization>
@@ -200,12 +201,18 @@
               <artifactId>cobertura-maven-plugin</artifactId>
               <version>2.6</version>
               <configuration>
-                <instrumentation/>
                 <formats>
                   <format>xml</format>
                   <format>html</format>
                 </formats>
                 <check/>
+                <!--
+                <instrumentation>
+                  <ignoreMethodAnnotations>
+                     <ignoreMethodAnnotation>${cobertura.ignoreMethodAnnotation}</ignoreMethodAnnotation>
+                  </ignoreMethodAnnotations>
+                </instrumentation>
+                -->
               </configuration>
               <executions>
                 <execution>
