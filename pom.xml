@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.1.7</version>
+  <version>1.1.8</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -218,7 +218,7 @@
               <execution>
                 <id>copy-scoverage-resources</id>
                 <goals>
-                  <goal>resource</goal>
+                  <goal>resources</goal>
                 </goals>
                 <configuration>
                   <outputDirectory>
