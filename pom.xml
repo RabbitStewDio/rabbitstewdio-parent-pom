@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>rabbitstewdio</groupId>
+  <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.4</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -13,7 +13,8 @@
     <dependencies.scala.version>2.11.2</dependencies.scala.version>
     <dependencies.scala.version.short>2.11</dependencies.scala.version.short>
     <dependencies.slf4j.version>1.7.6</dependencies.slf4j.version>
-    <cobertura.ignoreMethodAnnotation></cobertura.ignoreMethodAnnotation>
+    <project.build.java.source.version>1.7</project.build.java.source.version>
+    <project.build.java.target.version>1.7</project.build.java.target.version>
   </properties>
 
   <organization>
@@ -33,7 +34,42 @@
       <plugin>
         <groupId>com.rabbitstewdio.infrastructure</groupId>
         <artifactId>versions-maven-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <version>2.3.0</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.15</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <deployAtEnd>true</deployAtEnd>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>versions-maven-plugin</artifactId>
+        <version>2.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.8.1</version>
+        <configuration>
+          <tag>${project.artifactId}-${project.version}</tag>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
@@ -50,6 +86,7 @@
         </executions>
       </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -192,7 +229,6 @@
   <profiles>
     <profile>
       <id>scoverage</id>
-
       <build>
         <pluginManagement>
           <plugins>
@@ -206,13 +242,6 @@
                   <format>html</format>
                 </formats>
                 <check/>
-                <!--
-                <instrumentation>
-                  <ignoreMethodAnnotations>
-                     <ignoreMethodAnnotation>${cobertura.ignoreMethodAnnotation}</ignoreMethodAnnotation>
-                  </ignoreMethodAnnotations>
-                </instrumentation>
-                -->
               </configuration>
               <executions>
                 <execution>
@@ -266,6 +295,92 @@
 
           </plugins>
         </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>version-prepare-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.rabbitstewdio.infrastructure</groupId>
+            <artifactId>increment-version-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <goals>
+                  <goal>make-release</goal>
+                </goals>
+                <configuration>
+                  <buildNumber>1</buildNumber>
+                  <targetFile>${project.build.directory}/.version</targetFile>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>2.1</version>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <goals>
+                  <goal>set</goal>
+                </goals>
+                <configuration>
+                  <allowSnapshots>false</allowSnapshots>
+                  <oldVersion>${project.version}</oldVersion>
+                  <newVersion>${project.nextVersion}</newVersion>
+                  <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>version-post-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.rabbitstewdio.infrastructure</groupId>
+            <artifactId>increment-version-maven-plugin</artifactId>
+            <version>1.0.0</version>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <goals>
+                  <goal>increment</goal>
+                </goals>
+                <configuration>
+                  <qualifier>SNAPSHOT</qualifier>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>versions-maven-plugin</artifactId>
+            <version>2.1</version>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <goals>
+                  <goal>set</goal>
+                </goals>
+                <configuration>
+                  <allowSnapshots>false</allowSnapshots>
+                  <oldVersion>${project.version}</oldVersion>
+                  <newVersion>${project.nextVersion}</newVersion>
+                  <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
   </profiles>
