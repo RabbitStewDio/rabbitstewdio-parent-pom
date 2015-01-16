@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.5</version>
+  <version>1.2.6</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -17,6 +17,8 @@
     <project.build.java.target.version>1.7</project.build.java.target.version>
     <config.nodeDownloadRoot>http://nodejs.org/dist/</config.nodeDownloadRoot>
     <config.npmDownloadRoot>http://registry.npmjs.org/npm/</config.npmDownloadRoot>
+    <config.nodeVersion>v0.11.13</config.nodeVersion>
+    <config.npmVersion>1.3.8</config.npmVersion>
   </properties>
 
   <organization>
@@ -183,8 +185,8 @@
               <!-- optional: default phase is "generate-resources" -->
               <phase>generate-resources</phase>
               <configuration>
-                <nodeVersion>v0.11.14</nodeVersion>
-                <npmVersion>1.3.8</npmVersion>
+                <nodeVersion>${config.nodeVersion}</nodeVersion>
+                <npmVersion>${config.npmVersion}</npmVersion>
                 <nodeDownloadRoot>${config.nodeDownloadRoot}</nodeDownloadRoot>
                 <npmDownloadRoot>${config.npmDownloadRoot}</npmDownloadRoot>
               </configuration>
