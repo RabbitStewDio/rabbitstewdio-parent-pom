@@ -16,9 +16,9 @@
     <project.build.java.source.version>1.7</project.build.java.source.version>
     <project.build.java.target.version>1.7</project.build.java.target.version>
     <config.nodeDownloadRoot>http://nodejs.org/dist/</config.nodeDownloadRoot>
-    <config.npmDownloadRoot>http://registry.npmjs.org/npm/</config.npmDownloadRoot>
+    <config.npmDownloadRoot>http://registry.npmjs.org/npm/-/</config.npmDownloadRoot>
     <config.nodeVersion>v0.11.13</config.nodeVersion>
-    <config.npmVersion>1.3.8</config.npmVersion>
+    <config.npmVersion>2.2.0</config.npmVersion>
   </properties>
 
   <organization>
