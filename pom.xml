@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.4</version>
+  <version>1.2.5</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -15,6 +15,8 @@
     <dependencies.slf4j.version>1.7.6</dependencies.slf4j.version>
     <project.build.java.source.version>1.7</project.build.java.source.version>
     <project.build.java.target.version>1.7</project.build.java.target.version>
+    <config.nodeDownloadRoot>http://nodejs.org/dist/</config.nodeDownloadRoot>
+    <config.npmDownloadRoot>http://registry.npmjs.org/npm/</config.npmDownloadRoot>
   </properties>
 
   <organization>
@@ -168,7 +170,7 @@
         <plugin>
           <groupId>com.github.eirslett</groupId>
           <artifactId>frontend-maven-plugin</artifactId>
-          <version>0.0.15</version>
+          <version>0.0.19</version>
 
           <executions>
             <execution>
@@ -181,10 +183,10 @@
               <!-- optional: default phase is "generate-resources" -->
               <phase>generate-resources</phase>
               <configuration>
-                <nodeVersion>v0.10.18</nodeVersion>
+                <nodeVersion>v0.11.14</nodeVersion>
                 <npmVersion>1.3.8</npmVersion>
-                <!-- optional: where to download node and npm from. Defaults to http://nodejs.org/dist/ -->
-                <!-- <downloadRoot>http://myproxy.example.org/nodejs/dist/</downloadRoot> -->
+                <nodeDownloadRoot>${config.nodeDownloadRoot}</nodeDownloadRoot>
+                <npmDownloadRoot>${config.npmDownloadRoot}</npmDownloadRoot>
               </configuration>
             </execution>
             <execution>
