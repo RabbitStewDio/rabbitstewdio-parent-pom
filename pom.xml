@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.2.6</version>
+  <version>1.3.0</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -19,6 +19,7 @@
     <config.npmDownloadRoot>http://registry.npmjs.org/npm/-/</config.npmDownloadRoot>
     <config.nodeVersion>v0.11.13</config.nodeVersion>
     <config.npmVersion>2.2.0</config.npmVersion>
+    <config.grunt.test-target>test</config.grunt.test-target>
   </properties>
 
   <organization>
@@ -124,6 +125,7 @@
               </configuration>
             </execution>
             <execution>
+              <id>compile-test</id>
               <goals>
                 <goal>testCompile</goal>
               </goals>
@@ -224,6 +226,16 @@
                 -->
               </configuration>
             </execution>
+            <execution>
+              <id>grunt test</id>
+              <goals>
+                <goal>grunt</goal>
+              </goals>
+              <phase>test</phase>
+              <configuration>
+                <arguments>${config.grunt.test-target}</arguments>
+              </configuration>
+            </execution>
           </executions>
         </plugin>
       </plugins>
@@ -233,6 +245,9 @@
   <profiles>
     <profile>
       <id>scoverage</id>
+      <properties>
+        <config.grunt.test-target>test</config.grunt.test-target>
+      </properties>
       <build>
         <pluginManagement>
           <plugins>
@@ -263,40 +278,6 @@
                 </execution>
               </executions>
             </plugin>
-
-            <plugin>
-              <groupId>net.alchim31.maven</groupId>
-              <artifactId>scala-maven-plugin</artifactId>
-              <version>3.2.0</version>
-              <executions>
-                <execution>
-                  <id>compile</id>
-                  <goals>
-                    <goal>add-source</goal>
-                    <goal>compile</goal>
-                  </goals>
-                  <configuration>
-                    <args>
-                      <arg>-g:vars</arg>
-                    </args>
-                  </configuration>
-                </execution>
-                <execution>
-                  <id>test</id>
-                  <goals>
-                    <goal>testCompile</goal>
-                  </goals>
-                </execution>
-              </executions>
-              <configuration>
-                <sourceDir>src/main/scala</sourceDir>
-                <jvmArgs>
-                  <jvmArg>-Xms64m</jvmArg>
-                  <jvmArg>-Xmx1024m</jvmArg>
-                </jvmArgs>
-              </configuration>
-            </plugin>
-
           </plugins>
         </pluginManagement>
       </build>
@@ -387,5 +368,84 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>coffee-script</id>
+      <activation>
+        <file>
+          <exists>Gruntfile.coffee</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-webjars</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <includeGroupIds>org.webjars</includeGroupIds>
+                  <useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
+                  <useSubDirectoryPerScope>false</useSubDirectoryPerScope>
+                  <outputDirectory>${project.basedir}/webjars</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-coffee-script-compile</id>
+                <phase>process-test-classes</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy todir="${basedir}/target/test-assembly/src">
+                      <fileset dir="${basedir}/src/main/webapp" erroronmissingdir="false"/>
+                      <fileset dir="${basedir}/target/coffee/js" erroronmissingdir="false"/>
+                    </copy>
+                    <copy todir="${basedir}/target/test-assembly/test">
+                      <fileset dir="${basedir}/src/test/webapp" erroronmissingdir="false"/>
+                      <fileset dir="${basedir}/target/coffee/test" erroronmissingdir="false"/>
+                    </copy>
+                  </tasks>
+                </configuration>
+              </execution>
+              <execution>
+                <id>prepare-package-contents</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <copy todir="${basedir}/target/classes/META-INF/resources">
+                      <fileset dir="${basedir}/target/coffee" erroronmissingdir="false"/>
+                    </copy>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 </project>
