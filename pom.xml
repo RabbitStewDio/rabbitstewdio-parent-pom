@@ -20,6 +20,7 @@
     <config.nodeVersion>v0.11.13</config.nodeVersion>
     <config.npmVersion>2.2.0</config.npmVersion>
     <config.grunt.test-target>test</config.grunt.test-target>
+    <config.webjar.artifact-groups>org.webjars</config.webjar.artifact-groups>
   </properties>
 
   <organization>
@@ -389,10 +390,11 @@
                   <goal>unpack-dependencies</goal>
                 </goals>
                 <configuration>
-                  <includeGroupIds>org.webjars</includeGroupIds>
+                  <includeGroupIds>${config.webjar.artifact-groups}</includeGroupIds>
                   <useSubDirectoryPerArtifact>false</useSubDirectoryPerArtifact>
                   <useSubDirectoryPerScope>false</useSubDirectoryPerScope>
                   <outputDirectory>${project.basedir}/webjars</outputDirectory>
+                  <includes>META-INF/resources/**</includes>
                 </configuration>
               </execution>
             </executions>
