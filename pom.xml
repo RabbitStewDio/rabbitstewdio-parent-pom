@@ -21,6 +21,8 @@
     <config.npmVersion>2.2.0</config.npmVersion>
     <config.grunt.test-target>test</config.grunt.test-target>
     <config.webjar.artifact-groups>org.webjars</config.webjar.artifact-groups>
+    <config.webjar.codePrefix></config.webjar.codePrefix>
+    <config.webjar.source>target/coffee</config.webjar.source>
   </properties>
 
   <organization>
@@ -232,7 +234,7 @@
               <goals>
                 <goal>grunt</goal>
               </goals>
-              <phase>test</phase>
+              <phase>test-ci</phase>
               <configuration>
                 <arguments>${config.grunt.test-target}</arguments>
               </configuration>
@@ -419,11 +421,17 @@
                   <tasks>
                     <copy todir="${basedir}/target/test-assembly/src">
                       <fileset dir="${basedir}/src/main/webapp" erroronmissingdir="false"/>
-                      <fileset dir="${basedir}/target/coffee/js" erroronmissingdir="false"/>
                     </copy>
+                    <copy todir="${basedir}/target/test-assembly/src/${config.webjar.codePrefix}">
+                      <fileset dir="${basedir}/src/main/webapp" erroronmissingdir="false"/>
+                      <fileset dir="${basedir}/target/coffee/" erroronmissingdir="false"/>
+                    </copy>
+
                     <copy todir="${basedir}/target/test-assembly/test">
                       <fileset dir="${basedir}/src/test/webapp" erroronmissingdir="false"/>
-                      <fileset dir="${basedir}/target/coffee/test" erroronmissingdir="false"/>
+                    </copy>
+                    <copy todir="${basedir}/target/test-assembly/test/${config.webjar.codePrefix}">
+                      <fileset dir="${basedir}/target/test-coffee" erroronmissingdir="false"/>
                     </copy>
                   </tasks>
                 </configuration>
@@ -436,8 +444,8 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <copy todir="${basedir}/target/classes/META-INF/resources">
-                      <fileset dir="${basedir}/target/coffee" erroronmissingdir="false"/>
+                    <copy todir="${basedir}/target/classes/META-INF/resources/${config.webjar.codePrefix}">
+                      <fileset dir="${basedir}/${config.webjar.source}" erroronmissingdir="false"/>
                     </copy>
                   </tasks>
                 </configuration>
