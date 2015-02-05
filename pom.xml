@@ -19,7 +19,7 @@
     <config.npmDownloadRoot>http://registry.npmjs.org/npm/-/</config.npmDownloadRoot>
     <config.nodeVersion>v0.11.13</config.nodeVersion>
     <config.npmVersion>2.2.0</config.npmVersion>
-    <config.grunt.test-target>test</config.grunt.test-target>
+    <config.grunt.test-target>test-ci</config.grunt.test-target>
     <config.webjar.artifact-groups>org.webjars</config.webjar.artifact-groups>
     <config.webjar.codePrefix></config.webjar.codePrefix>
     <config.webjar.source>target/coffee</config.webjar.source>
@@ -267,7 +267,7 @@
               <goals>
                 <goal>grunt</goal>
               </goals>
-              <phase>test-ci</phase>
+              <phase>test</phase>
               <configuration>
                 <arguments>${config.grunt.test-target}</arguments>
               </configuration>
@@ -480,6 +480,18 @@
                     <copy todir="${basedir}/target/classes/META-INF/resources/${config.webjar.codePrefix}">
                       <fileset dir="${basedir}/${config.webjar.source}" erroronmissingdir="false"/>
                     </copy>
+                  </tasks>
+                </configuration>
+              </execution>
+              <execution>
+                <id>clean-webjars-dir</id>
+                <phase>clean</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <delete dir="${basedir}/webjars"/>
                   </tasks>
                 </configuration>
               </execution>
