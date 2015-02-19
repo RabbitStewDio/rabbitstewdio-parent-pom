@@ -17,8 +17,8 @@
     <project.build.java.target.version>1.7</project.build.java.target.version>
     <config.nodeDownloadRoot>http://nodejs.org/dist/</config.nodeDownloadRoot>
     <config.npmDownloadRoot>http://registry.npmjs.org/npm/-/</config.npmDownloadRoot>
-    <config.nodeVersion>v0.11.13</config.nodeVersion>
-    <config.npmVersion>2.2.0</config.npmVersion>
+    <config.nodeVersion>v0.12.0</config.nodeVersion>
+    <config.npmVersion>2.5.1</config.npmVersion>
     <config.grunt.test-target>test-ci</config.grunt.test-target>
     <config.webjar.artifact-groups>org.webjars</config.webjar.artifact-groups>
     <config.webjar.codePrefix></config.webjar.codePrefix>
