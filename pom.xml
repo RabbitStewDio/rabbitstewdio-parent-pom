@@ -221,7 +221,7 @@
                 <goal>install-node-and-npm</goal>
               </goals>
               <!-- optional: default phase is "generate-resources" -->
-              <phase>generate-resources</phase>
+              <phase>initialize</phase>
               <configuration>
                 <nodeVersion>${config.nodeVersion}</nodeVersion>
                 <npmVersion>${config.npmVersion}</npmVersion>
@@ -236,7 +236,7 @@
               </goals>
 
               <!-- optional: default phase is "generate-resources" -->
-              <phase>generate-resources</phase>
+              <phase>initialize</phase>
 
               <configuration>
                 <!-- optional: The default argument is actually
@@ -253,7 +253,7 @@
               </goals>
 
               <!-- optional: the default phase is "generate-resources" -->
-              <phase>generate-resources</phase>
+              <phase>compile</phase>
 
               <configuration>
                 <!-- optional: if not specified, it will run Grunt's default
@@ -282,7 +282,6 @@
     <profile>
       <id>scoverage</id>
       <properties>
-        <config.grunt.test-target>test</config.grunt.test-target>
       </properties>
       <build>
         <pluginManagement>
