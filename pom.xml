@@ -202,6 +202,7 @@
                 <useSubDirectoryPerScope>true</useSubDirectoryPerScope>
                 <useSubDirectoryPerType>true</useSubDirectoryPerType>
                 <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                <markersDirectory>${project.build.directory}/dependency-maven-plugin-markers-copy</markersDirectory>
               </configuration>
             </execution>
           </executions>
@@ -429,6 +430,7 @@
                   <useSubDirectoryPerScope>false</useSubDirectoryPerScope>
                   <outputDirectory>${project.basedir}/webjars</outputDirectory>
                   <includes>META-INF/resources/**</includes>
+                  <markersDirectory>${project.build.directory}/dependency-maven-plugin-markers-webjars</markersDirectory>
                 </configuration>
               </execution>
             </executions>
