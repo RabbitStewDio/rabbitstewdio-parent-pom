@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.3.1</version>
+  <version>1.3.2</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -23,6 +23,7 @@
     <config.webjar.artifact-groups>org.webjars</config.webjar.artifact-groups>
     <config.webjar.codePrefix></config.webjar.codePrefix>
     <config.webjar.source>target/coffee</config.webjar.source>
+    <config.repository>http://repo.rabbitstewdio.local/monkeyrepo</config.repository>
   </properties>
 
   <organization>
@@ -33,45 +34,12 @@
     <repository>
       <id>publish</id>
       <name>monkeyrepo</name>
-      <url>http://repo.rabbitstewdio.local/monkeyrepo</url>
+      <url>${config.repository}</url>
     </repository>
   </distributionManagement>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/main/scala</source>
-                <source>src/main/coffee</source>
-              </sources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>add-test-source</id>
-            <phase>generate-test-sources</phase>
-            <goals>
-              <goal>add-test-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>src/test/scala</source>
-                <source>src/test/coffee</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>com.rabbitstewdio.infrastructure</groupId>
         <artifactId>versions-maven-plugin</artifactId>
@@ -143,57 +111,12 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>net.alchim31.maven</groupId>
-          <artifactId>scala-maven-plugin</artifactId>
-          <version>3.2.0</version>
-          <executions>
-            <execution>
-              <id>compile</id>
-              <goals>
-                <goal>add-source</goal>
-                <goal>compile</goal>
-              </goals>
-              <configuration>
-                <args>
-                  <arg>-g:vars</arg>
-                </args>
-              </configuration>
-            </execution>
-            <execution>
-              <id>compile-test</id>
-              <goals>
-                <goal>testCompile</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <sourceDir>src/main/scala</sourceDir>
-            <jvmArgs>
-              <jvmArg>-Xms64m</jvmArg>
-              <jvmArg>-Xmx1024m</jvmArg>
-            </jvmArgs>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-source-plugin</artifactId>
-          <groupId>org.apache.maven.plugins</groupId>
-          <version>2.3</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <phase>package</phase>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
 
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
           <executions>
             <execution>
+              <id>copy-dependencies-lib</id>
               <phase>package</phase>
               <goals>
                 <goal>copy-dependencies</goal>
@@ -207,115 +130,157 @@
             </execution>
           </executions>
         </plugin>
-
-        <plugin>
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>0.0.19</version>
-
-          <executions>
-            <execution>
-              <!-- optional: you don't really need execution ids,
-              but it looks nice in your build log. -->
-              <id>install node and npm</id>
-              <goals>
-                <goal>install-node-and-npm</goal>
-              </goals>
-              <!-- optional: default phase is "generate-resources" -->
-              <phase>initialize</phase>
-              <configuration>
-                <nodeVersion>${config.nodeVersion}</nodeVersion>
-                <npmVersion>${config.npmVersion}</npmVersion>
-                <nodeDownloadRoot>${config.nodeDownloadRoot}</nodeDownloadRoot>
-                <npmDownloadRoot>${config.npmDownloadRoot}</npmDownloadRoot>
-              </configuration>
-            </execution>
-            <execution>
-              <id>npm install</id>
-              <goals>
-                <goal>npm</goal>
-              </goals>
-
-              <!-- optional: default phase is "generate-resources" -->
-              <phase>initialize</phase>
-
-              <configuration>
-                <!-- optional: The default argument is actually
-                "install", so unless you need to run some other npm command,
-                you can remove this whole <configuration> section.
-                -->
-                <arguments>install</arguments>
-              </configuration>
-            </execution>
-            <execution>
-              <id>grunt build</id>
-              <goals>
-                <goal>grunt</goal>
-              </goals>
-
-              <!-- optional: the default phase is "generate-resources" -->
-              <phase>compile</phase>
-
-              <configuration>
-                <!-- optional: if not specified, it will run Grunt's default
-                task (and you can remove this whole <configuration> section.)
-                <arguments>build</arguments>
-                -->
-              </configuration>
-            </execution>
-            <execution>
-              <id>grunt test</id>
-              <goals>
-                <goal>grunt</goal>
-              </goals>
-              <phase>test</phase>
-              <configuration>
-                <arguments>${config.grunt.test-target}</arguments>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
       </plugins>
     </pluginManagement>
   </build>
 
+
   <profiles>
     <profile>
-      <id>scoverage</id>
+      <id>scala-main</id>
+      <activation>
+        <file>
+          <exists>src/main/scala</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>add-source-scala</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/main/scala</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>compile</id>
+                <goals>
+                  <goal>add-source</goal>
+                  <goal>compile</goal>
+                </goals>
+                <configuration>
+                  <args>
+                    <arg>-g:vars</arg>
+                  </args>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <sourceDir>src/main/scala</sourceDir>
+              <jvmArgs>
+                <jvmArg>-Xms64m</jvmArg>
+                <jvmArg>-Xmx1024m</jvmArg>
+              </jvmArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>scala-test</id>
+      <activation>
+        <file>
+          <exists>src/test/scala</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>add-test-source-scala</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/test/scala</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>compile-test</id>
+                <goals>
+                  <goal>testCompile</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <sourceDir>src/main/scala</sourceDir>
+              <jvmArgs>
+                <jvmArg>-Xms64m</jvmArg>
+                <jvmArg>-Xmx1024m</jvmArg>
+              </jvmArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>coverage</id>
       <properties>
       </properties>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>cobertura-maven-plugin</artifactId>
-              <version>2.6</version>
-              <configuration>
-                <formats>
-                  <format>xml</format>
-                  <format>html</format>
-                </formats>
-                <check/>
-              </configuration>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>clean</goal>
-                    <goal>instrument</goal>
-                  </goals>
-                </execution>
-                <execution>
-                  <id>generate-report</id>
-                  <phase>package</phase>
-                  <goals>
-                    <goal>cobertura</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </pluginManagement>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+              <formats>
+                <format>xml</format>
+                <format>html</format>
+              </formats>
+              <check/>
+            </configuration>
+            <executions>
+              <execution>
+                <id>prepare-coverage</id>
+                <goals>
+                  <goal>clean</goal>
+                  <goal>instrument</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>generate-report</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>cobertura</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
 
@@ -415,6 +380,37 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>add-source-coffee</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/main/coffee</source>
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>add-test-source-coffee</id>
+                <phase>generate-test-sources</phase>
+                <goals>
+                  <goal>add-test-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/test/coffee</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
@@ -439,6 +435,69 @@
           <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
+            <version>0.0.19</version>
+
+            <executions>
+              <execution>
+                <!-- optional: you don't really need execution ids,
+                but it looks nice in your build log. -->
+                <id>install node and npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <!-- optional: default phase is "generate-resources" -->
+                <phase>initialize</phase>
+                <configuration>
+                  <nodeVersion>${config.nodeVersion}</nodeVersion>
+                  <npmVersion>${config.npmVersion}</npmVersion>
+                  <nodeDownloadRoot>${config.nodeDownloadRoot}</nodeDownloadRoot>
+                  <npmDownloadRoot>${config.npmDownloadRoot}</npmDownloadRoot>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+
+                <!-- optional: default phase is "generate-resources" -->
+                <phase>initialize</phase>
+
+                <configuration>
+                  <!-- optional: The default argument is actually
+                  "install", so unless you need to run some other npm command,
+                  you can remove this whole <configuration> section.
+                  -->
+                  <arguments>install</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>grunt build</id>
+                <goals>
+                  <goal>grunt</goal>
+                </goals>
+
+                <!-- optional: the default phase is "generate-resources" -->
+                <phase>compile</phase>
+
+                <configuration>
+                  <!-- optional: if not specified, it will run Grunt's default
+                  task (and you can remove this whole <configuration> section.)
+                  <arguments>build</arguments>
+                  -->
+                </configuration>
+              </execution>
+              <execution>
+                <id>grunt test</id>
+                <goals>
+                  <goal>grunt</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                  <arguments>${config.grunt.test-target}</arguments>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
 
           <plugin>
