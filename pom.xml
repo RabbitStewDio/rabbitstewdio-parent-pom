@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.rabbitstewdio</groupId>
   <artifactId>global-parent-pom</artifactId>
-  <version>1.4.0</version>
+  <version>1.4.2</version>
   <packaging>pom</packaging>
 
   <name>global-parent-pom</name>
@@ -24,6 +24,10 @@
     <config.webjar.codePrefix></config.webjar.codePrefix>
     <config.webjar.source>target/coffee</config.webjar.source>
     <config.repository>http://repo.rabbitstewdio.local/monkeyrepo</config.repository>
+    <config.scala.version.target>1.7</config.scala.version.target>
+    <config.java.version.target>1.7</config.java.version.target>
+    <config.java.version.source>1.7</config.java.version.source>
+    <config.java.version.vm>1.8</config.java.version.vm>
   </properties>
 
   <organization>
@@ -66,8 +70,18 @@
                   <version>3.1</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>1.8</version>
+                  <version>${config.java.version.vm}</version>
                 </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-convergence</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
                 <reactorModuleConvergence>
                   <message>The reactor is not valid</message>
                   <ignoreModuleDependencies>true</ignoreModuleDependencies>
@@ -89,6 +103,11 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-archetype-plugin</artifactId>
+        <version>2.3</version>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -183,6 +202,16 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-compile</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
             <version>1.7</version>
@@ -225,6 +254,15 @@
                 <jvmArg>-Xms64m</jvmArg>
                 <jvmArg>-Xmx1024m</jvmArg>
               </jvmArgs>
+              <args>
+                <arg>-target:jvm-${config.scala.version.target}</arg>
+              </args>
+              <javacArgs>
+                <javacArg>-source</javacArg>
+                <javacArg>${config.java.version.source}</javacArg>
+                <javacArg>-target</javacArg>
+                <javacArg>${config.java.version.target}</javacArg>
+              </javacArgs>
             </configuration>
           </plugin>
         </plugins>
@@ -240,6 +278,16 @@
       </activation>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testCompile</id>
+                <phase>none</phase>
+              </execution>
+            </executions>
+          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>build-helper-maven-plugin</artifactId>
@@ -277,6 +325,15 @@
                 <jvmArg>-Xms64m</jvmArg>
                 <jvmArg>-Xmx1024m</jvmArg>
               </jvmArgs>
+              <args>
+                <arg>-target:jvm-${config.scala.version.target}</arg>
+              </args>
+              <javacArgs>
+                <javacArg>-source</javacArg>
+                <javacArg>${config.java.version.source}</javacArg>
+                <javacArg>-target</javacArg>
+                <javacArg>${config.java.version.target}</javacArg>
+              </javacArgs>
             </configuration>
           </plugin>
         </plugins>
